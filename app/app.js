@@ -18,6 +18,10 @@ ZOHO.CREATOR.UTIL.getQueryParams().then(function (response) {
     })
 });
 
+// root.render(<App data={DataConverter(DATA)}/>)
+
+console.log("Data ----->",DATA)
+
 
 
 function LoadingPage() {
@@ -36,7 +40,7 @@ function NotFoundPage() {
 
 function App({ data }) {
     return <div className="w-full h-full bg-white p-3">
-        <div className="text-5xl text-gray-600 font-bold text-center my-3 mb-6">Purchase Request</div>
+        <div className="text-5xl text-gray-600 font-bold text-center my-3 mb-6">Purchase Request Line Items</div>
         <ComponentMapAppender data={data} />
     </div>
 }
@@ -138,19 +142,16 @@ function ChecklistComponent({ data, HeaderName = "Header Name" }) {
 
 function ComponentMapAppender({ data = {} }) {
     // data = {}
-    console.log("data", data)
     return <>
         {
             Object.entries(data).map(([SectionName, DataObject]) => {
-                console.log(DataObject)
                 switch (DataObject.type) {
                     case "detail":
-                        console.log(DataObject)
-                        return <DetailComponent data={DataObject.data} HeaderName={SectionName} />
+                        return <DetailComponent key={SectionName.replace(" ","-")} data={DataObject.data} HeaderName={SectionName} />
                     case "td":
-                        return <TableComponent data={DataObject.data} HeaderName={SectionName} />
+                        return <TableComponent key={SectionName.replace(" ","-")} data={DataObject.data} HeaderName={SectionName} />
                     case "checklist":
-                        return <ChecklistComponent data={DataObject.data} HeaderName={SectionName} />
+                        return <ChecklistComponent key={SectionName.replace(" ","-")} data={DataObject.data} HeaderName={SectionName} />
                     default:
                         break
                 }
