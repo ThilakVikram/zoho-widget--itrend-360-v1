@@ -1,4 +1,5 @@
 let root = ReactDOM.createRoot(document.getElementById("root"))
+// openUrl("https://creatorapp.zoho.com/scm_itrendsolution/itrend-360-v1/#Page:Page2?recid=" + input.ID,"new window");
 
 root.render(<LoadingPage />)
 
@@ -40,7 +41,7 @@ function NotFoundPage() {
 
 function App({ data }) {
     return <div className="w-full h-full bg-white p-3">
-        <div className="text-5xl text-gray-600 font-bold text-center my-3 mb-6">Purchase Request Line Items</div>
+        <div className="text-5xl text-gray-600 font-bold text-center my-3 mb-6">Quotation</div>
         <ComponentMapAppender data={data} />
     </div>
 }
