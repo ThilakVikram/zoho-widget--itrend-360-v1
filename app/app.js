@@ -4,7 +4,6 @@ root.render(<LoadingPage />)
 
 // Production Live
 ZOHO.CREATOR.UTIL.getQueryParams().then(function (response) {
-    console.log(response)
     APIRequest(response.recid).then(res => {
         if (res) {
             root.render(<App data={res} />)
