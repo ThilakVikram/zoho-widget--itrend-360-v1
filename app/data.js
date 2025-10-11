@@ -1,7 +1,7 @@
 let APIRequest = (id) => new Promise((res, rej) => {
     var config = {
         app_name: "itrend-360-v1",
-        report_name: "All_Purchase_Request_Line_Items",
+        report_name: "All_Quotations",
         id: id,
         field_config: "detail_view"
     };
@@ -13,59 +13,60 @@ let APIRequest = (id) => new Promise((res, rej) => {
     });
 })
 
-function DataConverter({ data = {} }) {
-    return {
-        "Basic Details": {
-            type: "detail",
-            data: {
-                "Purchase Request Item Number": data.Purchase_Request_Item_Number || "---",
-                "Item Name": data.Item.name || "---",
-                "Sku": data.Item.sku || "---",
-                "Asin": data.Item.cf_asin || "---",
-                "Quantity": data.Quantity || "---",
-                "Target Price": data.Target_Price || "---",
-                "Enhancement": data.Enhancement || "---",
-            }
-        },
-        "Previous Year Performance": {
-            type: "detail",
-            data: {
-                "From Date": data.From_Date || "---",
-                "To Date": data.To_Date || "---",
-                "Days": data.Days || "---",
-                "Units Sold": data.Units_Sold || "---",
-                "Profit": data.Profit || "---",
-                "Margin": data.Margin || "---",
-                "ROI": data.ROI || "---",
-            }
-        },
-        "Performance Prediction": {
-            type: "detail",
-            data: {
-                "From Date": data.From_Date1 || "---",
-                "To Date": data.To_Date1 || "---",
-                "Estimated Unit Sold": data.Estimated_Unit_Sold || "---",
-                "Estimated Profit": data.Estimated_Profit || "---",
-                "Estimated Margin": data.Estimated_Margin || "---",
-                "Estimated ROI": data.Estimated_ROI || "---",
-            }
-        },
-        "Stock Details": {
-            type: "detail",
-            data: {
-                "FBA": data.FBA || "---",
-                "Warehouse": data.Warehouse || "---",
-                "AWD": data.AWD || "---",
-                "China": data.China || "---",
-                "In-Transit to Destination Port": data.In_Transit_to_Destination_Port || "---",
-            }
-        },
-        "QC Checklist": {
-            type: "checklist",
-            data: {
-                "Have you understands the product's functionality, usage environment and performance expectations?": data.Have_you_understands_the_product_s_functionality_usage_environment_and_performance_expectations || "---",
-                "Have you checked any enchancement in the product ?": data.Have_you_checked_any_enchancement_in_the_product || "---",
-            }
+function Coalesce(...values) {
+    for (let item of values) {
+        if (item != "" && item) {
+            return item
         }
+    }
+}
+
+function DefineData(type, dataobj = {}) {
+    return {
+        type,
+        data: Object.fromEntries(Object.entries(dataobj).map(([k,v])=>[k,Coalesce(v,"---")]))
+    }
+}
+
+
+function DataConverter({ data }) {
+    return {
+        "Reference Detail": DefineData("detail",
+            {
+                "Quotation Number": data.Quotation_Number,
+                "Purchase Request Line Items": data.Purchase_Request_Line_Items.Purchase_Request_Item_Number,
+            }
+        ),
+        "Item Detail": DefineData("detail",
+            {
+                "Date": data.Date_field,
+                "Item Name": data.Item_Name.name,
+                "Sku": data.Item_Name.sku,
+                "Asin": data.Item_Name.cf_asin
+            }
+        ),
+        "Vendor Details":DefineData("detail",
+            {
+                "Vendor Name":data.Vendor_Name,
+                "Company Name":data.Company_Name
+            }
+        ),
+        "Quotation Details":DefineData("detail",
+            {
+                "Target Price":data.Target_Price,
+                "Quote Price":data.Quote_Price,
+                "Quantity":data.Quantity,
+                "Lead Time":data.Lead_Time,
+                "Shipment Term":data.Shipment_Term,
+                "Port":data.Port
+            }
+        ),
+        "Sample Details Checklist (QC)":DefineData("checklist",
+            {
+                "Have you verified sample against the Specification Sheet?":data.Have_you_verified_sample_against_the_Specification_Sheet,
+                "Did the Product pass all the Quality tests?":data.Did_the_Product_pass_all_the_Quality_tests,
+                "Have you created a complete inspection report for each sample?":data.Have_you_created_a_complete_inspection_report_for_each_sample
+            }
+        )
     }
 }
