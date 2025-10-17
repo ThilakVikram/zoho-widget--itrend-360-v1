@@ -56,36 +56,18 @@ function App({ data }) {
     </div>
 }
 
-function CurveText() {
-    return <svg viewBox="0 0 300 300">
-        <path
-            id="circlePath"
-            d="M 150,150 m -100,0 a 100,100 0 1,1 200,0 a 100,100 0 1,1 -200,0"
-            fill="none"
-            stroke="gray"
-            strokeWidth="0.5"
-        />
-        <text>Name</text>
-        <text fontSize="20" fill="#2563eb" fontWeight="600">
-            <textPath href="#circlePath" startOffset="25%">
-                Curved Text with Tailwind & React
-            </textPath>
-        </text>
-    </svg>
-}
-
 const Tracking = ({ currentStep = 6, data = {} }) => {
-    // let data = {
-    //     "Marketing Manager checklist1": { completeddate: "12-11-2000" },
-    //     "Marketing Manager checklist2": { completeddate: "12-11-2000" },
-    //     "Marketing Manager checklist3": { completeddate: "12-11-2000" },
-    //     "Marketing Manager checklist4": { completeddate: "12-11-2000" },
-    //     "Marketing Manager checklist5": { completeddate: "12-11-2000" },
-    //     "Marketing Manager checklist6": { completeddate: "12-11-2000" },
-    //     "Marketing Manager checklist7": { completeddate: "12-11-2000" },
-    //     "Marketing Manager checklist8": { completeddate: "12-11-2000" },
-    //     "Marketing Manager checklist9": { completeddate: "12-11-2000" },
-    // }
+    let data = {
+        "Marketing Manager checklist1": { completeddate: "12-11-2000" },
+        "Marketing Manager checklist2": { completeddate: "12-11-2000" },
+        "Marketing Manager checklist3": { completeddate: "12-11-2000" },
+        "Marketing Manager checklist4": { completeddate: "12-11-2000" },
+        "Marketing Manager checklist5": { completeddate: "12-11-2000" },
+        "Marketing Manager checklist6": { completeddate: "12-11-2000" },
+        "Marketing Manager checklist7": { completeddate: "12-11-2000" },
+        "Marketing Manager checklist8": { completeddate: "12-11-2000" },
+        "Marketing Manager checklist9": { completeddate: "12-11-2000" },
+    }
     return <div className="max-w-full h-fit flex items-center overflow-scroll sbh my-3 relative">
         <div className="absolute top-0 text-6xl w-full h-full text-center text-gray-100 font-bold left-0">
             Tracking
