@@ -4,24 +4,25 @@ let root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(<LoadingPage />)
 
 // Production Live
-ZOHO.CREATOR.UTIL.getQueryParams().then(function (response) {
-    console.log(response)
-    APIRequest(response.recid).then(res => {
-        if (res) {
-            root.render(<App data={res} />)
-        }
-        else {
-            root.render(<NotFoundPage />)
-        }
-    }).catch(err => {
-        console.log(err)
-        root.render(<NotFoundPage />)
-    })
-});
+// ZOHO.CREATOR.UTIL.getQueryParams().then(function (response) {
+//     console.log(response)
+//     id = response.recid;
+//     APIRequest(response.recid).then(res => {
+//         if (res) {
+//             root.render(<App data={res} />)
+//         }
+//         else {
+//             root.render(<NotFoundPage />)
+//         }
+//     }).catch(err => {
+//         console.log(err)
+//         root.render(<NotFoundPage />)
+//     })
+// });
 
-// root.render(<App data={DataConverter(DATA)}/>)
+root.render(<App data={DataConverter(DATA)} />)
 
-console.log("Data ----->",DATA)
+console.log("Data ----->", DATA)
 
 
 
@@ -40,11 +41,76 @@ function NotFoundPage() {
 
 
 function App({ data }) {
-    return <div className="w-full h-full bg-white p-3">
-        <div className="text-5xl text-gray-600 font-bold text-center my-3 mb-6">Quotation</div>
-        <ComponentMapAppender data={data} />
+    let showapproval = React.useState(false)
+    return <div className="w-full h-full bg-white p-3 flex flex-row">
+        <div className="min-w-full h-full p-3">
+            <div className="text-5xl text-gray-600 font-bold text-center my-3 mb-6 relative">
+                Quotation
+            </div>
+            <div className="w-full h-fit flex flex-row items-center justify-center">
+                <Tracking />
+            </div>
+            <ComponentMapAppender data={data} />
+        </div>
+        <HoverApprover />
     </div>
 }
+
+function CurveText() {
+    return <svg viewBox="0 0 300 300">
+        <path
+            id="circlePath"
+            d="M 150,150 m -100,0 a 100,100 0 1,1 200,0 a 100,100 0 1,1 -200,0"
+            fill="none"
+            stroke="gray"
+            strokeWidth="0.5"
+        />
+        <text>Name</text>
+        <text fontSize="20" fill="#2563eb" fontWeight="600">
+            <textPath href="#circlePath" startOffset="25%">
+                Curved Text with Tailwind & React
+            </textPath>
+        </text>
+    </svg>
+}
+
+const Tracking = ({ currentStep = 6, data = {} }) => {
+    // let data = {
+    //     "Marketing Manager checklist1": { completeddate: "12-11-2000" },
+    //     "Marketing Manager checklist2": { completeddate: "12-11-2000" },
+    //     "Marketing Manager checklist3": { completeddate: "12-11-2000" },
+    //     "Marketing Manager checklist4": { completeddate: "12-11-2000" },
+    //     "Marketing Manager checklist5": { completeddate: "12-11-2000" },
+    //     "Marketing Manager checklist6": { completeddate: "12-11-2000" },
+    //     "Marketing Manager checklist7": { completeddate: "12-11-2000" },
+    //     "Marketing Manager checklist8": { completeddate: "12-11-2000" },
+    //     "Marketing Manager checklist9": { completeddate: "12-11-2000" },
+    // }
+    return <div className="max-w-full h-fit flex items-center overflow-scroll sbh my-3 relative">
+        <div className="absolute top-0 text-6xl w-full h-full text-center text-gray-100 font-bold left-0">
+            Tracking
+        </div>
+        <div className="max-w-fit w-full h-fit flex flex-row items-center">
+            {Object.entries(data).map(([key, value], i, obj) => {
+                return <div className="flex flex-1 flex-col items-center rounded-t-full gap-3 relative">
+                    <div className="h-full w-full flex flex-row items-center justify-center relative">
+                        <div className={`w-12 aspect-square font-bold ${currentStep <= i ? "bg-gray-300" : currentStep == i + 1 ? "bg-yellow-300" : "bg-green-300"} rounded-full flex items-center justify-center z-10`}>
+                            {i + 1}
+                        </div>
+                        <div className="w-full flex flex-row absolute">
+                            <div className={`w-1/2 h-1 ${i == 0 ? "" : currentStep <= i ? "bg-gray-300" : "bg-green-500"}`}></div>
+                            <div className={`w-1/2 h-1 ${obj.length == i + 1 ? "" : currentStep <= i + 1 ? "bg-gray-300" : "bg-green-500"}`}></div>
+                        </div>
+                    </div>
+                    <div className="w-fit flex flex-col text-sm items-center">
+                        <span className="text-gray-900 max-w-46 font-bold text-nowrap overflow-ellipsis overflow-hidden" title="Marketing Manager Approval">{key}</span>
+                        <span className="text-gray-600">Completed : <span className="text-gray-900 font-bold">{value.completeddate}</span></span>
+                    </div>
+                </div>
+            })}
+        </div >
+    </div >
+};
 
 function DetailComponent({ data, HeaderName = "Header Not Set" }) {
     return <div className="w-full h-fit bg-gray-100 p-3 border-gray-300 py-6 hover:shadow-sm shadow-gray-300 my-3">
@@ -148,15 +214,29 @@ function ComponentMapAppender({ data = {} }) {
             Object.entries(data).map(([SectionName, DataObject]) => {
                 switch (DataObject.type) {
                     case "detail":
-                        return <DetailComponent key={SectionName.replace(" ","-")} data={DataObject.data} HeaderName={SectionName} />
+                        return <DetailComponent key={SectionName.replace(" ", "-")} data={DataObject.data} HeaderName={SectionName} />
                     case "td":
-                        return <TableComponent key={SectionName.replace(" ","-")} data={DataObject.data} HeaderName={SectionName} />
+                        return <TableComponent key={SectionName.replace(" ", "-")} data={DataObject.data} HeaderName={SectionName} />
                     case "checklist":
-                        return <ChecklistComponent key={SectionName.replace(" ","-")} data={DataObject.data} HeaderName={SectionName} />
+                        return <ChecklistComponent key={SectionName.replace(" ", "-")} data={DataObject.data} HeaderName={SectionName} />
                     default:
                         break
                 }
             })
         }
     </>
+}
+
+function HoverApprover() {
+    let [showme, setshowme] = React.useState(false);
+    return <div className="w-24 aspect-square fixed top-0 right-0 p-6">
+        <a className="min-w-full aspect-square bg-violet-900" href={detail_view_link()} onClick={(e) => {
+            e.preventDefault()
+            if (!id) {
+                window.open(e.currentTarget.href, "_blank")
+            }
+        }}>
+            <SliderIcon />
+        </a>
+    </div>
 }
