@@ -20,7 +20,7 @@ root.render(<LoadingPage />)
 //     })
 // });
 
-root.render(<App data={DataConverter(DATA)} />)
+root.render(<App data={DataConverter(DATA)} tdata={TrackingConverter(DATA)} />)
 
 console.log("Data ----->", DATA)
 
@@ -40,52 +40,25 @@ function NotFoundPage() {
 }
 
 
-function App({ data }) {
+function App({ data, tdata }) {
     let showapproval = React.useState(false)
+    console.log(tdata)
     return <div className="w-full h-full bg-white p-3 flex flex-row">
         <div className="min-w-full h-full p-3">
             <div className="text-5xl text-gray-600 font-bold text-center my-3 mb-6 relative">
-                Quotation
+                {DocType}
             </div>
             <div className="w-full h-fit flex flex-row items-center justify-center">
-                <Tracking />
+                <Tracking Data={tdata} />
             </div>
             <ComponentMapAppender data={data} />
         </div>
-        <HoverApprover />
     </div>
 }
 
-function CurveText() {
-    return <svg viewBox="0 0 300 300">
-        <path
-            id="circlePath"
-            d="M 150,150 m -100,0 a 100,100 0 1,1 200,0 a 100,100 0 1,1 -200,0"
-            fill="none"
-            stroke="gray"
-            strokeWidth="0.5"
-        />
-        <text>Name</text>
-        <text fontSize="20" fill="#2563eb" fontWeight="600">
-            <textPath href="#circlePath" startOffset="25%">
-                Curved Text with Tailwind & React
-            </textPath>
-        </text>
-    </svg>
-}
-
-const Tracking = ({ currentStep = 6, data = {} }) => {
-    // let data = {
-    //     "Marketing Manager checklist1": { completeddate: "12-11-2000" },
-    //     "Marketing Manager checklist2": { completeddate: "12-11-2000" },
-    //     "Marketing Manager checklist3": { completeddate: "12-11-2000" },
-    //     "Marketing Manager checklist4": { completeddate: "12-11-2000" },
-    //     "Marketing Manager checklist5": { completeddate: "12-11-2000" },
-    //     "Marketing Manager checklist6": { completeddate: "12-11-2000" },
-    //     "Marketing Manager checklist7": { completeddate: "12-11-2000" },
-    //     "Marketing Manager checklist8": { completeddate: "12-11-2000" },
-    //     "Marketing Manager checklist9": { completeddate: "12-11-2000" },
-    // }
+const Tracking = ({ Data }) => {
+    let data = Data.data
+    let currentStep = Data.currentprocess
     return <div className="max-w-full h-fit flex items-center overflow-scroll sbh my-3 relative">
         <div className="absolute top-0 text-6xl w-full h-full text-center text-gray-100 font-bold left-0">
             Tracking
@@ -102,9 +75,9 @@ const Tracking = ({ currentStep = 6, data = {} }) => {
                             <div className={`w-1/2 h-1 ${obj.length == i + 1 ? "" : currentStep <= i + 1 ? "bg-gray-300" : "bg-green-500"}`}></div>
                         </div>
                     </div>
-                    <div className="w-fit flex flex-col text-sm items-center">
-                        <span className="text-gray-900 max-w-46 font-bold text-nowrap overflow-ellipsis overflow-hidden" title="Marketing Manager Approval">{key}</span>
-                        <span className="text-gray-600">Completed : <span className="text-gray-900 font-bold">{value.completeddate}</span></span>
+                    <div className="max-w-fit flex flex-col text-sm items-center">
+                        <span className="text-gray-900 max-w-96 font-bold text-nowrap overflow-ellipsis overflow-hidden px-12" title="Marketing Manager Approval">{key}</span>
+                        <span className="text-gray-600">Completed : <span className="text-gray-900 font-bold">{(value.completeddate || "Pending")}</span></span>
                     </div>
                 </div>
             })}
@@ -225,18 +198,4 @@ function ComponentMapAppender({ data = {} }) {
             })
         }
     </>
-}
-
-function HoverApprover() {
-    let [showme, setshowme] = React.useState(false);
-    return <div className="w-24 aspect-square fixed top-0 right-0 p-6">
-        <a className="min-w-full aspect-square bg-violet-900" href={detail_view_link()} onClick={(e) => {
-            e.preventDefault()
-            if (!id) {
-                window.open(e.currentTarget.href, "_blank")
-            }
-        }}>
-            <SliderIcon />
-        </a>
-    </div>
 }
