@@ -1,8 +1,8 @@
 let appName = "itrend-360-v1"
-let reportName = "Purchase_Request_Api"
+let reportName = ""
 let id = ""
 let field_config = "detail_view"
-let DocType = "Purchase Request"
+let DocType = ""
 let isnottest = false
 
 let APIRequest = (id) => new Promise((res, rej) => {
