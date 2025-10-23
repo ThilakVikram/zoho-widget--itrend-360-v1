@@ -3,6 +3,21 @@ let reportName = "Purchase_Request_Api"
 let id = ""
 let field_config = "detail_view"
 let DocType = "Purchase Request"
+let isnottest = false
+
+let APIRequest = (id) => new Promise((res, rej) => {
+    var config = {
+        app_name: appName,
+        report_name: reportName,
+        id: id,
+        field_config: "detail_view"
+    };
+    ZOHO.CREATOR.DATA.getRecordById(config).then(function (response) {
+        res(response)
+    }).catch(err => {
+        console.log("err", err)
+    });
+})
 
 function DataConverter({ data = DATA.data }) {
     console.log(data)

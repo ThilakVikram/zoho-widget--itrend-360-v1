@@ -2,26 +2,27 @@ let root = ReactDOM.createRoot(document.getElementById("root"))
 // openUrl("https://creatorapp.zoho.com/scm_itrendsolution/itrend-360-v1/#Page:Page2?recid=" + input.ID,"new window");
 
 root.render(<LoadingPage />)
-
 // Production Live
-// ZOHO.CREATOR.UTIL.getQueryParams().then(function (response) {
-//     console.log(response)
-//     id = response.recid;
-//     APIRequest(response.recid).then(res => {
-//         if (res) {
-//             root.render(<App data={res} />)
-//         }
-//         else {
-//             root.render(<NotFoundPage />)
-//         }
-//     }).catch(err => {
-//         console.log(err)
-//         root.render(<NotFoundPage />)
-//     })
-// });
+if (isnottest) {
+    ZOHO.CREATOR.UTIL.getQueryParams().then(function (response) {
+        id = response.recid;
+        APIRequest(response.recid).then(res => {
+            if (res) {
+                root.render(<App data={DataConverter(res)} tdata={TrackingConverter(res)} />)
+            }
+            else {
+                root.render(<NotFoundPage />)
+            }
+        }).catch(err => {
+            console.log(err)
+            root.render(<NotFoundPage />)
+        })
+    });
+}
 
-root.render(<App data={DataConverter(DATA)} tdata={TrackingConverter(DATA)} />)
-
+else {
+    root.render(<App data={DataConverter(DATA)} tdata={TrackingConverter(DATA)} />)
+}
 console.log("Data ----->", DATA)
 
 
